@@ -15,7 +15,7 @@ import { OverscaledTileID } from "./tile_id";
  */
 
 export interface Planet {
-  getTile(z: number, x: number, y: number): ArrayBuffer;
+  getTile(z: number, x: number, y: number): Promise<ArrayBuffer | null>;
 }
 
 export interface PlanetPlugin {
@@ -46,7 +46,7 @@ export default class PlanetVectorTileSource extends Evented implements Source {
   map: Map;
   bounds: [number, number, number, number];
 
-  // url: string is omitted, because that is just for TileJSON
+  // url: string is omitted, because we don't need TileJSON
 
   // This is the arr
   tiles: Array<string>;
@@ -157,12 +157,12 @@ export default class PlanetVectorTileSource extends Evented implements Source {
     return extend({}, this._options);
   }
 
-  // TODO
   loadTile(tile: Tile, callback: Callback<void>) {
     if (!planetPlugin) {
-      throw new Error(
-        "The PlanetVectorTile plugin has not been loaded! Cannot load tile."
-      );
+      throw new Error("The PlanetVectorTile plugin has not been loaded! Cannot load tile.");
+    }
+    if (!this.planet) {
+      throw new Error('PlanetVectorTile source has not been loaded with a planet. Cannot load tile.');
     }
 
     const params = {
@@ -174,11 +174,26 @@ export default class PlanetVectorTileSource extends Evented implements Source {
       source: this.id,
       pixelRatio: this.map.getPixelRatio(),
       showCollisionBoxes: this.map.showCollisionBoxes,
+      tileBuffer: null, // The ArrayBuffer from this.planet.getTile
     };
 
     if (!tile.actor || tile.state === "expired") {
       tile.actor = this.dispatcher.getActor();
-      tile.request = tile.actor.send("loadTile", params, done.bind(this));
+
+      const { z, x, y } = tile.tileID.canonical;
+      const self = this
+      this.planet.getTile(z, x, y).then(buffer => {
+        if (buffer) {
+          params.tileBuffer = buffer
+
+          // Although we now have the tile buffer in the main thread,
+          // there is parsing work to be done in the worker (PlanetVectorTileSourceWorker).
+          tile.request = tile.actor.send("loadTile", params, done.bind(self));
+        }
+      }).catch(e => {
+        console.error(`Unable to load tile from planet. ${z}/${x}/${y}`, e);
+      })
+    
     } else if (tile.state === "loading") {
       // schedule tile reloading after it has been loaded
       tile.reloadCallback = callback;

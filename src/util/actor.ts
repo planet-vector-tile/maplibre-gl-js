@@ -71,7 +71,16 @@ class Actor {
         if (callback) {
             this.callbacks[id] = callback;
         }
-        const buffers: Array<Transferable> = isSafari(this.globalScope) ? undefined : [];
+
+        // We don't want to do a copy, even for Safari, because this will be executed
+        // on the main thread for PlanetVectorTile.
+        //
+        // The bug was fixed by Apple.
+        // https://github.com/mapbox/mapbox-gl-js/issues/8771
+        // https://trac.webkit.org/changeset/262581/webkit
+        // const buffers: Array<Transferable> = isSafari(this.globalScope) ? undefined : [];
+        const buffers: Array<Transferable> = [];
+        
         this.target.postMessage({
             id,
             type,
