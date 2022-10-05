@@ -38,7 +38,7 @@ export type VTFeature =
       geometry: Array<Array<[number, number]>>;
     };
 
-class PVTFeatureWrapper implements VectorTileFeature {
+export class PVTFeatureWrapper implements VectorTileFeature {
   _feature: VTFeature;
   extent: number;
   type: 1 | 2 | 3;
