@@ -89,6 +89,8 @@ class VectorTileSource extends Evented implements Source {
         }
 
         this.setEventedParent(eventedParent);
+        debugger
+        
     }
 
     load() {
