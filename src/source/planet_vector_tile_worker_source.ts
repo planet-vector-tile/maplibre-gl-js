@@ -101,7 +101,9 @@ class PVTWrapper implements VectorTile {
 
     constructor(features: Array<VTFeature>) {
         const layer = new PVTLayerWrapper(features);
-        this.layers['pvt'] = layer
+        this.layers = {
+          pvt: layer
+        }
     }
 }
 
