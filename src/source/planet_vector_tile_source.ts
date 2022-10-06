@@ -179,22 +179,19 @@ export default class PlanetVectorTileSource extends Evented implements Source {
 
       const { z, x, y } = tile.tileID.canonical;
       const self = this
-      // this.planet.tile(z, x, y).then(buffer => {
-      //   if (buffer) {
-      //     params.tileBuffer = buffer
+      this.planet.tile(z, x, y).then(buffer => {
+        if (buffer) {
+          params.tileBuffer = buffer
 
-      //     console.log('buffer', buffer)
+          console.log('buffer', buffer)
 
-      //     // Although we now have the tile buffer in the main thread,
-      //     // there is parsing work to be done in the worker (PlanetVectorTileSourceWorker).
-      //     tile.request = tile.actor.send("loadTile", params, done.bind(self));
-      //   }
-      // }).catch(e => {
-      //   console.error(`Unable to load tile from planet. ${z}/${x}/${y}`, e);
-      // })
-
-      const str = this.planet.tile(z, x, y)
-      console.log('str', str)
+          // Although we now have the tile buffer in the main thread,
+          // there is parsing work to be done in the worker (PlanetVectorTileSourceWorker).
+          tile.request = tile.actor.send("loadTile", params, done.bind(self));
+        }
+      }).catch(e => {
+        console.error(`Unable to load tile from planet. ${z}/${x}/${y}`, e);
+      })
 
     
     } else if (tile.state === "loading") {
