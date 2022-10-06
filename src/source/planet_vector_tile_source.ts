@@ -14,12 +14,8 @@ import { OverscaledTileID } from "./tile_id";
  * Everything in this file is executed on the main thread.
  */
 
-export interface Planet {
-  getTile(z: number, x: number, y: number): Promise<ArrayBuffer | null>;
-}
-
 export interface PlanetPlugin {
-  loadPlanet(source: VectorSourceSpecification): Planet;
+  loadPlanet(path: string, minzoom: number, maxzoom: number): any;
 }
 
 let planetPlugin: PlanetPlugin = null;
@@ -29,7 +25,7 @@ export function setPlanetVectorTilePlugin(plugin: PlanetPlugin) {
 }
 
 export default class PlanetVectorTileSource extends Evented implements Source {
-  planet: Planet | null;
+  planet: any | null;
   type: "planet";
   id: string;
   minzoom: number;
@@ -111,7 +107,8 @@ export default class PlanetVectorTileSource extends Evented implements Source {
       );
     }
 
-    this.planet = planetPlugin.loadPlanet(this._options);
+    console.log('this._options', this._options)
+    this.planet = planetPlugin.loadPlanet(this._options.tiles[0], this._options.minzoom, this._options.maxzoom);
 
     this.fire(
       new Event("data", { dataType: "source", sourceDataType: "metadata" })
@@ -182,17 +179,23 @@ export default class PlanetVectorTileSource extends Evented implements Source {
 
       const { z, x, y } = tile.tileID.canonical;
       const self = this
-      this.planet.getTile(z, x, y).then(buffer => {
-        if (buffer) {
-          params.tileBuffer = buffer
+      // this.planet.tile(z, x, y).then(buffer => {
+      //   if (buffer) {
+      //     params.tileBuffer = buffer
 
-          // Although we now have the tile buffer in the main thread,
-          // there is parsing work to be done in the worker (PlanetVectorTileSourceWorker).
-          tile.request = tile.actor.send("loadTile", params, done.bind(self));
-        }
-      }).catch(e => {
-        console.error(`Unable to load tile from planet. ${z}/${x}/${y}`, e);
-      })
+      //     console.log('buffer', buffer)
+
+      //     // Although we now have the tile buffer in the main thread,
+      //     // there is parsing work to be done in the worker (PlanetVectorTileSourceWorker).
+      //     tile.request = tile.actor.send("loadTile", params, done.bind(self));
+      //   }
+      // }).catch(e => {
+      //   console.error(`Unable to load tile from planet. ${z}/${x}/${y}`, e);
+      // })
+
+      const str = this.planet.tile(z, x, y)
+      console.log('str', str)
+
     
     } else if (tile.state === "loading") {
       // schedule tile reloading after it has been loaded
