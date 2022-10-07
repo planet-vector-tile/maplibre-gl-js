@@ -162,6 +162,7 @@ export default class PlanetVectorTileSource extends Evented implements Source {
       throw new Error('PlanetVectorTile source has not been loaded with a planet. Cannot load tile.');
     }
 
+    // TODO: Extend WorkerTileParams type to include tileBuffer
     const params = {
       uid: tile.uid,
       tileID: tile.tileID,
@@ -181,9 +182,11 @@ export default class PlanetVectorTileSource extends Evented implements Source {
       const self = this
       this.planet.tile(z, x, y).then(buffer => {
         if (buffer) {
+          // TODO convert Buffer to ArrayBuffer
           params.tileBuffer = buffer
 
           console.log('buffer', buffer)
+
 
           // Although we now have the tile buffer in the main thread,
           // there is parsing work to be done in the worker (PlanetVectorTileSourceWorker).

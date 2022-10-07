@@ -184,7 +184,8 @@ class Actor {
             }
         } else {
             let completed = false;
-            const buffers: Array<Transferable> = isSafari(this.globalScope) ? undefined : [];
+            // Also avoid Safari hack here.
+            const buffers: Array<Transferable> = [];
             const done = task.hasCallback ? (err: Error, data?: any) => {
                 completed = true;
                 delete this.cancelCallbacks[id];
