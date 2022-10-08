@@ -27,6 +27,7 @@ export type WorkerTileParameters = TileParameters & {
     showCollisionBoxes: boolean;
     collectResourceTiming?: boolean;
     returnDependencies?: boolean;
+    tileBuffer?: ArrayBuffer; // Used in PlanetVectorTileSource
 };
 
 export type WorkerDEMTileParameters = TileParameters & {
