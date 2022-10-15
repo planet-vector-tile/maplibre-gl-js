@@ -24,8 +24,10 @@ export default function loadGeometry(feature: VectorTileFeature): Array<Array<Po
     // We want to avoid unnecessary scaling, rounding, clamping, as this extra processing adds up...
     if (feature instanceof PlanetVectorTileFeature) {
         // TODO Make sure appropriate clamping is done in Rust.
+        console.log('asdf')
         return feature.loadGeometry();
     }
+    console.log('eeee')
 
     const scale = EXTENT / feature.extent;
     const geometry = feature.loadGeometry();

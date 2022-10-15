@@ -15,17 +15,21 @@ import type StyleLayerIndex from '../style/style_layer_index';
 
 import vtpbf from 'vt-pbf';
 
+// import planetPlugin, { Planet } from 'planet-vector-tile'
+
 export default class VectorTileWorkerSource implements WorkerSource {
     actor: Actor;
     layerIndex: StyleLayerIndex;
     availableImages: Array<string>;
     loaded: { [_: string]: WorkerTile };
+    // planet: Planet;
 
     constructor(actor: Actor, layerIndex: StyleLayerIndex, availableImages: Array<string>) {
         this.actor = actor;
         this.layerIndex = layerIndex;
         this.availableImages = availableImages;
         this.loaded = {};
+        // this.planet = planetPlugin.loadPlanet('fromworker', 0, 14);
     }
 
     loadTile(params: WorkerTileParameters, callback: WorkerTileCallback) {
@@ -34,7 +38,16 @@ export default class VectorTileWorkerSource implements WorkerSource {
         // No request to cancel.
         workerTile.abort = () => {};
 
+        // this.planet.tile()
+
+
+        // it's an array, not ArrayBuffer, figure this out...
         const pvt = new PlanetVectorTile(params.tileBuffer);
+
+        console.log('pvt tile properties', pvt.layers.tile_info.feature(0).properties)
+        console.log('pvt tile pointss', pvt.layers.tile_info.feature(0).loadGeometry())
+        debugger;
+
 
         // Create actual MapboxVectorTile protocol buffer for internal use.
         // Can we avoid this?

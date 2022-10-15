@@ -146,7 +146,6 @@ export default class PlanetVectorTileSource extends Evented implements Source {
             throw new Error('PlanetVectorTile source has not been loaded with a planet. Cannot load tile.');
         }
 
-        // TODO: Extend WorkerTileParams type to include tileBuffer
         const params = {
             uid: tile.uid,
             tileID: tile.tileID,
@@ -164,19 +163,26 @@ export default class PlanetVectorTileSource extends Evented implements Source {
 
             const { z, x, y } = tile.tileID.canonical;
             const self = this;
+
+            // TODO: See if we can do this in planet_vector_tile_worker_source...
             this.planet
                 .tile(z, x, y)
-                .then(buffer => {
-                    if (buffer) {
-                        // TODO convert Buffer to ArrayBuffer
-                        params.tileBuffer = buffer;
-
-                        console.log('buffer', buffer);
-
-                        // Although we now have the tile buffer in the main thread,
-                        // there is parsing work to be done in the worker (PlanetVectorTileSourceWorker).
-                        tile.request = tile.actor.send('loadTile', params, done.bind(self));
+                .then(buf => {
+                    if (!buf) {
+                        return;
                     }
+
+                    // For some reason, buf is an Array, not a Buffer ???
+                    // https://nodejs.org/dist/latest-v16.x/docs/api/buffer.html#buffers-and-typedarrays
+                    // const uint8array = new Uint8Array(buf.buffer, buf.byteOffset, buf.length / Uint8Array.BYTES_PER_ELEMENT);
+                    // const buffer = uint8array.buffer
+                    // params.tileBuffer = buffer;
+
+                    params.tileBuffer = buf;
+
+                    // Although we now have the tile buffer in the main thread,
+                    // there is parsing work to be done in the worker (PlanetVectorTileSourceWorker).
+                    tile.request = tile.actor.send('loadTile', params, done.bind(self));
                 })
                 .catch(e => {
                     console.error(`Unable to load tile from planet. ${z}/${x}/${y}`, e);
