@@ -1,6 +1,6 @@
 import WorkerTile from './worker_tile';
 import { extend } from '../util/util';
-import { PlanetVectorTile } from 'planet-vector-tile/ts/planet-vector-tile';
+import { PlanetVectorTile } from 'planet-vector-tile/dist/planet-vector-tile';
 
 import type {
     WorkerSource,
