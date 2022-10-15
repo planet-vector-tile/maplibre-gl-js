@@ -44,11 +44,6 @@ export default class VectorTileWorkerSource implements WorkerSource {
         // it's an array, not ArrayBuffer, figure this out...
         const pvt = new PlanetVectorTile(params.tileBuffer);
 
-        console.log('pvt tile properties', pvt.layers.tile_info.feature(0).properties)
-        console.log('pvt tile pointss', pvt.layers.tile_info.feature(0).loadGeometry())
-        debugger;
-
-
         // Create actual MapboxVectorTile protocol buffer for internal use.
         // Can we avoid this?
         const pbf: Uint8Array = vtpbf(pvt);
