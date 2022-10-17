@@ -27,7 +27,7 @@ export type WorkerTileParameters = TileParameters & {
     showCollisionBoxes: boolean;
     collectResourceTiming?: boolean;
     returnDependencies?: boolean;
-    tileBuffer?: Uint8Array | Array<Number>; // we want to move away from Array<Number>
+    tileBuffer?: Uint8Array;
 };
 
 export type WorkerDEMTileParameters = TileParameters & {
