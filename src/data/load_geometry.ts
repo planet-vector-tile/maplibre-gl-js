@@ -26,7 +26,6 @@ export default function loadGeometry(feature: VectorTileFeature): Array<Array<Po
         // TODO Make sure appropriate clamping is done in Rust.
         return feature.loadGeometry();
     }
-    console.log('eeee')
 
     const scale = EXTENT / feature.extent;
     const geometry = feature.loadGeometry();
