@@ -164,19 +164,12 @@ export default class PlanetVectorTileSource extends Evented implements Source {
             const { z, x, y } = tile.tileID.canonical;
             const self = this;
 
-            // TODO: See if we can do this in planet_vector_tile_worker_source...
             this.planet
                 .tile(z, x, y)
                 .then(buf => {
                     if (!buf) {
                         return;
                     }
-
-                    // For some reason, buf is an Array, not a Buffer ???
-                    // https://nodejs.org/dist/latest-v16.x/docs/api/buffer.html#buffers-and-typedarrays
-                    // const uint8array = new Uint8Array(buf.buffer, buf.byteOffset, buf.length / Uint8Array.BYTES_PER_ELEMENT);
-                    // const buffer = uint8array.buffer
-                    // params.tileBuffer = buffer;
 
                     params.tileBuffer = buf;
 
