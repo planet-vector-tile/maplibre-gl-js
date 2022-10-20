@@ -34,7 +34,6 @@ export default class VectorTileWorkerSource implements WorkerSource {
         // No request to cancel.
         workerTile.abort = () => {};
 
-        // it's an array, not ArrayBuffer, figure this out...
         const pvt = new PlanetVectorTile(params.tileBuffer);
 
         // Create actual MapboxVectorTile protocol buffer for internal use.
