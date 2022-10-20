@@ -22,8 +22,8 @@ const MIN = -MAX - 1;
  */
 export default function loadGeometry(feature: VectorTileFeature): Array<Array<Point>> {
     // We want to avoid unnecessary scaling, rounding, clamping, as this extra processing adds up...
+    // PlanetVectorTile does this already in tile.rs.
     if (feature instanceof PlanetVectorTileFeature) {
-        // TODO Make sure appropriate clamping is done in Rust.
         return feature.loadGeometry();
     }
 
