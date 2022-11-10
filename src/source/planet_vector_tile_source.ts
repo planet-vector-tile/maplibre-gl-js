@@ -15,7 +15,7 @@ import { OverscaledTileID } from './tile_id';
  */
 
 export interface PlanetPlugin {
-    loadPlanet(tiles: string[], minzoom: number, maxzoom: number): any;
+    loadPlanet(options: object): any;
 }
 
 let planetPlugin: PlanetPlugin = null;
@@ -96,7 +96,7 @@ export default class PlanetVectorTileSource extends Evented implements Source {
         }
 
         console.log('this._options', this._options);
-        this.planet = planetPlugin.loadPlanet(this._options.tiles, this._options.minzoom, this._options.maxzoom);
+        this.planet = planetPlugin.loadPlanet(this._options.tiles);
 
         this.fire(new Event('data', { dataType: 'source', sourceDataType: 'metadata' }));
         this.fire(new Event('data', { dataType: 'source', sourceDataType: 'content' }));
