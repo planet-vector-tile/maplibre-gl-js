@@ -70,7 +70,7 @@ export default class PlanetVectorTileSource extends Evented implements Source {
         this.reparseOverscaled = true;
 
         // Experiment with turning this off?
-        this.isTileClipped = true;
+        this.isTileClipped = false;
 
         extend(this, pick(options, ['tileSize']));
         this._options = extend({ type: 'planet' }, options);

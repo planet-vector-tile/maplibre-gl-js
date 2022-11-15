@@ -15,7 +15,7 @@ import type StyleLayerIndex from '../style/style_layer_index';
 
 import vtpbf from 'vt-pbf';
 
-export default class VectorTileWorkerSource implements WorkerSource {
+export default class PlanetVectorTileWorkerSource implements WorkerSource {
     actor: Actor;
     layerIndex: StyleLayerIndex;
     availableImages: Array<string>;
