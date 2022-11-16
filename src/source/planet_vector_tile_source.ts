@@ -31,9 +31,6 @@ export default class PlanetVectorTileSource extends Evented implements Source {
     minzoom: number;
     maxzoom: number;
     tileSize: number;
-
-    // According to interface Source, `false` if tiles can be drawn outside their
-    // boundaries, `true` if they cannot.
     isTileClipped: boolean;
     reparseOverscaled: boolean;
 
@@ -66,10 +63,13 @@ export default class PlanetVectorTileSource extends Evented implements Source {
             throw new Error('vector tile sources must have a tileSize of 512');
         }
 
-        // Maybe make it so this is not necessary?
+        // Should this be true? It is true for GeoJSON and MVT.
         this.reparseOverscaled = true;
 
-        // Experiment with turning this off?
+        // According to interface Source, `false` if tiles can be drawn outside their
+        // boundaries, `true` if they cannot.
+        // Feature selection does not work for geometries outside of their origin tile,
+        // so it is best to keep this off.
         this.isTileClipped = false;
 
         extend(this, pick(options, ['tileSize']));
