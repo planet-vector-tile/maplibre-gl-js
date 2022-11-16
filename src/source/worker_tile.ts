@@ -63,7 +63,8 @@ class WorkerTile {
 
     parse(data: VectorTile, layerIndex: StyleLayerIndex, availableImages: Array<string>, actor: Actor, callback: WorkerTileCallback) {
         this.status = 'parsing';
-        this.data = data;
+        // This is an unnecessary refererence to PVT, and it keeps the object retained in memory when it is not needed.
+        //this.data = data;
 
         this.collisionBoxArray = new CollisionBoxArray();
         const sourceLayerCoder = new DictionaryCoder(Object.keys(data.layers).sort());

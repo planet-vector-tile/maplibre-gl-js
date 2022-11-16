@@ -36,19 +36,17 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
 
         const pvt = new PlanetVectorTile(params.tileBuffer);
 
-        // Create actual MapboxVectorTile protocol buffer for internal use.
-        // Can we avoid this?
-        const pbf: Uint8Array = vtpbf(pvt);
-        const mvtBuffer = pbf.buffer;
+        // NHTODO GeoJSON recreates a PBF. This adds quite a lot to memory usage.
+        // const pbf: Uint8Array = vtpbf(pvt);
+        // const mvtBuffer = pbf.buffer;
 
-        workerTile.vectorTile = pvt;
+        // workerTile.vectorTile = pvt;
         workerTile.parse(pvt, this.layerIndex, this.availableImages, this.actor, (err, result) => {
             if (err) return callback(err);
 
-            // Transferring a copy of rawTileData because the worker needs to retain its copy.
-            // Really?
-            const workerTileResult: WorkerTileResult = extend({ rawTileData: mvtBuffer.slice(0) }, result);
-            callback(null, workerTileResult);
+            // const workerTileResult: WorkerTileResult = extend({ rawTileData: mvtBuffer.slice(0) }, result);
+            // callback(null, workerTileResult);
+            callback(null, result);
         });
 
         this.loaded = this.loaded || {};
@@ -83,6 +81,8 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
             } else if (workerTile.status === 'done') {
                 // if there was no vector tile data on the initial load, don't try and re-parse tile
                 if (workerTile.vectorTile) {
+                    console.log('PVT reloadTile');
+                    debugger;
                     workerTile.parse(workerTile.vectorTile, this.layerIndex, this.availableImages, this.actor, done);
                 } else {
                     done();
