@@ -34,7 +34,6 @@
     "murmurhash-js": "^1.0.0",
     "pbf": "^3.2.1",
     "planet-vector-tile": "file:..",
-    "potpack": "^1.0.2",
     "potpack": "^2.0.0",
     "quickselect": "^2.0.0",
     "supercluster": "^7.1.5",

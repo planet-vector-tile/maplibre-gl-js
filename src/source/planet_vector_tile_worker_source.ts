@@ -1,13 +1,11 @@
 import WorkerTile from './worker_tile';
-import { extend } from '../util/util';
-import { PlanetVectorTile } from 'planet-vector-tile/dist/planet-vector-tile';
+import { PVT } from 'planet-vector-tile/dist/pvt';
 
 import type {
     WorkerSource,
     WorkerTileParameters,
     WorkerTileCallback,
     TileParameters,
-    WorkerTileResult,
 } from '../source/worker_source';
 
 import type Actor from '../util/actor';
@@ -34,7 +32,7 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
         // No request to cancel.
         workerTile.abort = () => {};
 
-        const pvt = new PlanetVectorTile(params.tileBuffer);
+        const pvt = new PVT(params.tileBuffer);
 
         // NHTODO GeoJSON recreates a PBF. This adds quite a lot to memory usage.
         // This is needed for feature selection to work.
