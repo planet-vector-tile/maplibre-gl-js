@@ -8,7 +8,7 @@ import { extend, pick } from '../util/util';
 import { Source } from './source';
 import Tile from './tile';
 import TileBounds from './tile_bounds';
-import { OverscaledTileID } from './tile_id';
+import { CanonicalTileID, OverscaledTileID } from './tile_id';
 
 /**
  * Everything in this file is executed on the main thread.
@@ -16,6 +16,7 @@ import { OverscaledTileID } from './tile_id';
 
 export interface PlanetPlugin {
     loadPlanet(options: object): any;
+    onTileLoad(tile: CanonicalTileID, buf: any): void;
 }
 
 let planetPlugin: PlanetPlugin = null;
@@ -172,6 +173,11 @@ export default class PlanetVectorTileSource extends Evented implements Source {
                     }
 
                     params.tileBuffer = buf;
+
+                    // For debugging and benchmark purposes.
+                    if (planetPlugin.onTileLoad) {
+                        planetPlugin.onTileLoad(tile.tileID.canonical, buf);
+                    }
 
                     // Although we now have the tile buffer in the main thread,
                     // there is parsing work to be done in the worker (PlanetVectorTileSourceWorker).
