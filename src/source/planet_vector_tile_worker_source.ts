@@ -1,5 +1,5 @@
 import WorkerTile from './worker_tile';
-import { PVT } from 'planet-vector-tile/dist/pvt';
+import PVT from 'planet-vector-tile/dist/pvt';
 
 import type {
     WorkerSource,
@@ -34,11 +34,14 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
 
         const pvt = new PVT(params.tileBuffer);
 
+        console.log('here');
+        debugger;
+
         // NHTODO GeoJSON recreates a PBF. This adds quite a lot to memory usage.
         // This is needed for feature selection to work.
         const pbf: Uint8Array = vtpbf(pvt);
 
-        // workerTile.vectorTile = pvt;
+        workerTile.vectorTile = pvt;
         workerTile.parse(pvt, this.layerIndex, this.availableImages, this.actor, (err, result) => {
             if (err) return callback(err);
 
@@ -51,9 +54,6 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
     }
 
     reloadTile(params: WorkerTileParameters, callback: WorkerTileCallback) {
-        console.log('PVT reloadTile');
-        debugger;
-        
         const loaded = this.loaded;
         const uid = params.uid;
         const self = this;

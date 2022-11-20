@@ -4,7 +4,7 @@ import EXTENT from './extent';
 
 import type Point from '@mapbox/point-geometry';
 import type {VectorTileFeature} from '@mapbox/vector-tile';
-import { PlanetVectorTileFeature } from 'planet-vector-tile/dist/pvt';
+import PVT from 'planet-vector-tile/dist/pvt';
 
 // These bounds define the minimum and maximum supported coordinate values.
 // While visible coordinates are within [0, EXTENT], tiles may theoretically
@@ -23,7 +23,7 @@ const MIN = -MAX - 1;
 export default function loadGeometry(feature: VectorTileFeature): Array<Array<Point>> {
     // We want to avoid unnecessary scaling, rounding, clamping, as this extra processing adds up...
     // PlanetVectorTile does this already in tile.rs.
-    if (feature instanceof PlanetVectorTileFeature) {
+    if (feature instanceof PVT) {
         return feature.loadGeometry();
     }
 
