@@ -4,7 +4,7 @@ import EXTENT from './extent';
 
 import type Point from '@mapbox/point-geometry';
 import type {VectorTileFeature} from '@mapbox/vector-tile';
-import PVT from 'planet-vector-tile/dist/pvt';
+import { PVT } from 'planet-vector-tile/dist/pvt';
 
 // These bounds define the minimum and maximum supported coordinate values.
 // While visible coordinates are within [0, EXTENT], tiles may theoretically

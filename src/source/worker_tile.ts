@@ -25,7 +25,7 @@ import type {
 } from '../source/worker_source';
 import type {PromoteIdSpecification} from '../style-spec/types.g';
 import type {VectorTile} from '@mapbox/vector-tile';
-import PVT from '../../../dist/pvt';
+import { PVT } from '../../../dist/pvt';
 
 class WorkerTile {
     tileID: OverscaledTileID;

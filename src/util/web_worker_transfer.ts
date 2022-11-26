@@ -8,7 +8,7 @@ import {AJAXError} from './ajax';
 
 import type {Transferable} from '../types/transferable';
 import {isImageBitmap} from './util';
-import PVT, {Layer, Feature} from '../../../dist/pvt';
+import {PVT, Layer, Feature} from '../../../dist/pvt';
 
 type SerializedObject = {
     [_: string]: Serialized;

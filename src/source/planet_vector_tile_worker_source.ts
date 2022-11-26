@@ -1,5 +1,5 @@
 import WorkerTile from './worker_tile';
-import PVT from 'planet-vector-tile/dist/pvt';
+import { PVT } from 'planet-vector-tile/dist/pvt';
 
 import type {
     WorkerSource,
