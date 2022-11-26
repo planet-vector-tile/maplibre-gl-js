@@ -8,6 +8,7 @@ import {AJAXError} from './ajax';
 
 import type {Transferable} from '../types/transferable';
 import {isImageBitmap} from './util';
+import PVT, {Layer, Feature} from '../../../dist/pvt';
 
 type SerializedObject = {
     [_: string]: Serialized;
@@ -75,6 +76,11 @@ register('StyleExpression', StyleExpression, {omit: ['_evaluator']});
 register('ZoomDependentExpression', ZoomDependentExpression);
 register('ZoomConstantExpression', ZoomConstantExpression);
 register('CompoundExpression', CompoundExpression, {omit: ['_evaluate']});
+
+register('PVT', PVT);
+register('Layer', Layer);
+register('Feature', Feature);
+
 for (const name in expressions) {
     if ((expressions[name] as any)._classRegistryKey) continue;
     register(`Expression_${name}`, expressions[name]);

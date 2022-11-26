@@ -100,6 +100,28 @@ class FeatureIndex {
             this.vtLayers = new vt.VectorTile(new Protobuf(this.rawTileData)).layers;
             this.sourceLayerCoder = new DictionaryCoder(this.vtLayers ? Object.keys(this.vtLayers).sort() : ['_geojsonTileLayer']);
         }
+        // This condition will only happen with a PVT source.
+        if (this.vtLayers && !this.sourceLayerCoder) {
+            // We make sure the points have the Point prototype.
+            // Mapbox's trans-worker deserialization logic 
+            // doesn't preserve the prototype for some reason...
+            console.log('Attaching Point prototype.');
+            for (const layerName in this.vtLayers) {
+                let layer = this.vtLayers[layerName];
+                let len = layer.length;
+                for (let i = 0; i < len; i++) {
+                    const feature = layer.feature(i);
+                    let geom: Point[][] = feature.loadGeometry();
+                    for (let j = 0; j < geom.length; j++) {
+                        for (let k = 0; k < geom[j].length; k++) {
+                            let p = geom[j][k];
+                            Object.setPrototypeOf(p, Point.prototype);
+                        }
+                    }
+                }
+            }
+            this.sourceLayerCoder = new DictionaryCoder(Object.keys(this.vtLayers).sort());
+        }
         return this.vtLayers;
     }
 

@@ -25,6 +25,7 @@ import type {
 } from '../source/worker_source';
 import type {PromoteIdSpecification} from '../style-spec/types.g';
 import type {VectorTile} from '@mapbox/vector-tile';
+import PVT from '../../../dist/pvt';
 
 class WorkerTile {
     tileID: OverscaledTileID;
@@ -64,13 +65,22 @@ class WorkerTile {
     parse(data: VectorTile, layerIndex: StyleLayerIndex, availableImages: Array<string>, actor: Actor, callback: WorkerTileCallback) {
         this.status = 'parsing';
         // This is an unnecessary refererence to PVT, and it keeps the object retained in memory when it is not needed.
-        //this.data = data;
+        // Leaving this for MVT for posterity, though I see no references accessing the data property.
+        if (data instanceof PVT === false) {
+            this.data = data;
+        }
 
         this.collisionBoxArray = new CollisionBoxArray();
         const sourceLayerCoder = new DictionaryCoder(Object.keys(data.layers).sort());
 
         const featureIndex = new FeatureIndex(this.tileID, this.promoteId);
         featureIndex.bucketLayerIDs = [];
+
+        // Including the JavaScript PVT object is used so we do not have to 
+        // hold onto the data buffer and reparse it in the main thread.
+        if (data instanceof PVT) {
+            featureIndex.vtLayers = data.layers;
+        }
 
         const buckets: {[_: string]: Bucket} = {};
 
