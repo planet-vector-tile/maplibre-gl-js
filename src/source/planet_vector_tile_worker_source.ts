@@ -15,31 +15,57 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
     actor: Actor;
     layerIndex: StyleLayerIndex;
     availableImages: Array<string>;
+    loading: { [_: string]: WorkerTile };
     loaded: { [_: string]: WorkerTile };
+    loadPlanet: any;
+    planet: any | null;
 
     constructor(actor: Actor, layerIndex: StyleLayerIndex, availableImages: Array<string>) {
         this.actor = actor;
         this.layerIndex = layerIndex;
         this.availableImages = availableImages;
+        this.loading = {};
         this.loaded = {};
+
+        const plugin = require('../index');
+        this.loadPlanet = plugin.loadPlanet;
     }
 
     loadTile(params: WorkerTileParameters, callback: WorkerTileCallback) {
-        const workerTile = new WorkerTile(params);
+        const uid = params.uid;
 
-        // No request to cancel.
-        workerTile.abort = () => {};
+        if (!this.planet) {
+            this.planet = this.loadPlanet(params.pvtSources);
+        }
 
-        const pvt = new PVT(params.tileBuffer);
+        const workerTile = this.loading[uid] = new WorkerTile(params);
 
-        workerTile.vectorTile = pvt;
-        workerTile.parse(pvt, this.layerIndex, this.availableImages, this.actor, (err, result) => {
-            if (err) return callback(err);
-            callback(null, result);
+        let {z, x, y} = params.tileID.canonical;
+        this.planet.tile(z, x, y).then(buf => {
+            delete this.loading[uid];
+
+            if (!buf) {
+                return callback();
+            }
+
+            const pvt = new PVT(buf);
+            workerTile.vectorTile = pvt;
+
+            workerTile.parse(pvt, this.layerIndex, this.availableImages, this.actor, (err, result) => {
+                if (err) return callback(err);
+                callback(null, result);
+            });
+    
+            this.loaded[params.uid] = workerTile;
+            
+        }).catch(err => {
+            console.error(`Unable to load tile from planet. ${z}/${x}/${y}`, e);
+
+            workerTile.status = 'done';
+            this.loaded[uid] = workerTile;
+            return callback(err);
         });
 
-        this.loaded = this.loaded || {};
-        this.loaded[params.uid] = workerTile;
     }
 
     reloadTile(params: WorkerTileParameters, callback: WorkerTileCallback) {
@@ -79,7 +105,7 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
     }
 
     abortTile(params: TileParameters, callback: WorkerTileCallback) {
-        // There is no request to abort
+        
         callback();
     }
 

@@ -27,7 +27,7 @@ export type WorkerTileParameters = TileParameters & {
     showCollisionBoxes: boolean;
     collectResourceTiming?: boolean;
     returnDependencies?: boolean;
-    tileBuffer?: Uint8Array;
+    pvtSources?: string[];
 };
 
 export type WorkerDEMTileParameters = TileParameters & {

@@ -158,36 +158,12 @@ export default class PlanetVectorTileSource extends Evented implements Source {
             source: this.id,
             pixelRatio: this.map.getPixelRatio(),
             showCollisionBoxes: this.map.showCollisionBoxes,
-            tileBuffer: null, // The ArrayBuffer from this.planet.getTile
+            pvtSources: this._options.tiles,
         };
 
         if (!tile.actor || tile.state === 'expired') {
             tile.actor = this.dispatcher.getActor();
-
-            const { z, x, y } = tile.tileID.canonical;
-            const self = this;
-
-            this.planet
-                .tile(z, x, y)
-                .then(buf => {
-                    if (!buf) {
-                        return;
-                    }
-
-                    params.tileBuffer = buf;
-
-                    // For debugging and benchmark purposes.
-                    if (planetPlugin.onTileLoad) {
-                        planetPlugin.onTileLoad(tile.tileID.canonical, buf);
-                    }
-
-                    // Although we now have the tile buffer in the main thread,
-                    // there is parsing work to be done in the worker (PlanetVectorTileSourceWorker).
-                    tile.request = tile.actor.send('loadTile', params, done.bind(self));
-                })
-                .catch(e => {
-                    console.error(`Unable to load tile from planet. ${z}/${x}/${y}`, e);
-                });
+            tile.request = tile.actor.send('loadTile', params, done.bind(this));
         } else if (tile.state === 'loading') {
             // schedule tile reloading after it has been loaded
             tile.reloadCallback = callback;
