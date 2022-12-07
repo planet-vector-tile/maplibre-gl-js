@@ -336,6 +336,7 @@ class Transform {
             tileSize: number;
             minzoom?: number;
             maxzoom?: number;
+            evenOnly?: boolean;
             roundZoom?: boolean;
             reparseOverscaled?: boolean;
             renderWorldCopies?: boolean;
@@ -343,6 +344,9 @@ class Transform {
         }
     ): Array<OverscaledTileID> {
         let z = this.coveringZoomLevel(options);
+
+        if (options.evenOnly && z & 1) --z;
+
         const actualZ = z;
 
         if (options.minzoom !== undefined && z < options.minzoom) return [];

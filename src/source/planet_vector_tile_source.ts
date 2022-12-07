@@ -31,6 +31,7 @@ export default class PlanetVectorTileSource extends Evented implements Source {
     id: string;
     minzoom: number;
     maxzoom: number;
+    evenOnly: boolean;
     tileSize: number;
     isTileClipped: boolean;
     reparseOverscaled: boolean;
@@ -57,6 +58,7 @@ export default class PlanetVectorTileSource extends Evented implements Source {
         this.type = 'planet';
         this.minzoom = 0;
         this.maxzoom = 22;
+        this.evenOnly = true;
         this.tileSize = 512;
 
         // Experiment with supporting larger tile sizes?

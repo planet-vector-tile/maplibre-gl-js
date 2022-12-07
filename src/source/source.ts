@@ -37,6 +37,7 @@ export interface Source {
     id: string;
     minzoom: number;
     maxzoom: number;
+    evenOnly?: boolean;
     tileSize: number;
     attribution?: string;
     roundZoom?: boolean;
