@@ -44,6 +44,11 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
         this.planet.tile(z, x, y).then(buf => {
             delete this.loading[uid];
 
+            if (workerTile.aborted) {
+                console.log('ABORTED this.planet.tile result callback');
+                return callback();
+            }
+
             if (!buf) {
                 return callback();
             }
@@ -105,7 +110,18 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
     }
 
     abortTile(params: TileParameters, callback: WorkerTileCallback) {
-        
+        const uid = params.uid;
+        const loading = this.loading;
+        const workerTile = loading[uid];
+        if (workerTile) {
+            workerTile.aborted = true;
+            delete loading[uid]
+            if (this.planet) {
+                console.log('worker source abortTile', params);
+                const { z, x, y } = workerTile.tileID.canonical;
+                this.planet.abort(z, x, y);
+            }
+        }
         callback();
     }
 

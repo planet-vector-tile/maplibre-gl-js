@@ -45,6 +45,7 @@ class WorkerTile {
     collisionBoxArray: CollisionBoxArray;
 
     abort: (() => void);
+    aborted: boolean;
     reloadCallback: WorkerTileCallback;
     vectorTile: VectorTile;
 

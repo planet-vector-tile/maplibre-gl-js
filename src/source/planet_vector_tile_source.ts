@@ -197,6 +197,8 @@ export default class PlanetVectorTileSource extends Evented implements Source {
     }
 
     abortTile(tile: Tile) {
+        console.log('source abortTile', tile);
+
         if (tile.request) {
             tile.request.cancel();
             delete tile.request;
