@@ -64,7 +64,7 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
             this.loaded[params.uid] = workerTile;
             
         }).catch(err => {
-            console.error(`Unable to load tile from planet. ${z}/${x}/${y}`, e);
+            console.error(`Unable to load tile from planet. ${z}/${x}/${y}`, err);
 
             workerTile.status = 'done';
             this.loaded[uid] = workerTile;
