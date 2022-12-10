@@ -52,7 +52,7 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
             if (!buf) {
                 return callback();
             }
-
+            console.log(`${z}/${x}/${y} ${(buf.length / 1048576).toFixed(2)}M`);
             const pvt = new PVT(buf);
             workerTile.vectorTile = pvt;
 
