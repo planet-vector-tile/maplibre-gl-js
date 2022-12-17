@@ -27,7 +27,8 @@ export default class PlanetVectorTileWorkerSource implements WorkerSource {
         this.loading = {};
         this.loaded = {};
 
-        const plugin = require('../index');
+        const pluginPath = process?.env?.PVT_PLUGIN_PATH || '../index';
+        const plugin = require(pluginPath);
         this.loadPlanet = plugin.loadPlanet;
     }
 
