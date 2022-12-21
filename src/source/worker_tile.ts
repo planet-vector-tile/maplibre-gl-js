@@ -83,6 +83,9 @@ class WorkerTile {
             featureIndex.vtLayers = data.layers;
         }
 
+        // This is helpful for all layer types to track what layers are in the tiles.
+        featureIndex.layerIds = Object.keys(data.layers);
+
         const buckets: {[_: string]: Bucket} = {};
 
         const options = {

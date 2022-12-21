@@ -55,6 +55,7 @@ class FeatureIndex {
     bucketLayerIDs: Array<Array<string>>;
 
     vtLayers: {[_: string]: VectorTileLayer};
+    layerIds: Array<string>;
     sourceLayerCoder: DictionaryCoder;
 
     constructor(tileID: OverscaledTileID, promoteId?: PromoteIdSpecification | null) {
