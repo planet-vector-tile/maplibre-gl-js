@@ -296,7 +296,7 @@ class Tile {
         maxPitchScaleFactor: number,
         pixelPosMatrix: mat4
     ): {[_: string]: Array<{featureIndex: number; feature: GeoJSONFeature}>} {
-        if (!this.latestFeatureIndex || !this.latestFeatureIndex.rawTileData)
+        if (!this.latestFeatureIndex)
             return {};
 
         return this.latestFeatureIndex.query({
@@ -317,9 +317,10 @@ class Tile {
         validate?: boolean;
     }) {
         const featureIndex = this.latestFeatureIndex;
-        if (!featureIndex || !featureIndex.rawTileData) return;
+        if (!featureIndex) return;
 
         const vtLayers = featureIndex.loadVTLayers();
+        if (Object.keys(vtLayers).length === 0) return;
 
         const sourceLayer = params && params.sourceLayer ? params.sourceLayer : '';
         const layer = vtLayers._geojsonTileLayer || vtLayers[sourceLayer];
@@ -415,12 +416,12 @@ class Tile {
 
     setFeatureState(states: LayerFeatureStates, painter: any) {
         if (!this.latestFeatureIndex ||
-            !this.latestFeatureIndex.rawTileData ||
             Object.keys(states).length === 0) {
             return;
         }
 
         const vtLayers = this.latestFeatureIndex.loadVTLayers();
+        if (Object.keys(vtLayers).length === 0) return;
 
         for (const id in this.buckets) {
             if (!painter.style.hasLayer(id)) continue;

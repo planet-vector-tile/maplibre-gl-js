@@ -514,6 +514,7 @@ class SourceCache extends Evented {
                 tileSize: this.usedForTerrain ? this.tileSize : this._source.tileSize,
                 minzoom: this._source.minzoom,
                 maxzoom: this._source.maxzoom,
+                evenOnly: this._source.evenOnly,
                 roundZoom: this.usedForTerrain ? false : this._source.roundZoom,
                 reparseOverscaled: this._source.reparseOverscaled,
                 terrain

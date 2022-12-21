@@ -37,6 +37,7 @@ export interface Source {
     id: string;
     minzoom: number;
     maxzoom: number;
+    evenOnly?: boolean;
     tileSize: number;
     attribution?: string;
     roundZoom?: boolean;
@@ -82,6 +83,7 @@ import geojson from '../source/geojson_source';
 import video from '../source/video_source';
 import image from '../source/image_source';
 import canvas from '../source/canvas_source';
+import planet from '../source/planet_vector_tile_source'
 
 import type {SourceSpecification} from '../style-spec/types.g';
 
@@ -92,7 +94,8 @@ const sourceTypes = {
     geojson,
     video,
     image,
-    canvas
+    canvas,
+    planet
 };
 
 /*

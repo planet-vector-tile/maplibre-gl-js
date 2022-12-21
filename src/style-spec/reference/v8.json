@@ -124,7 +124,8 @@
     "source_raster_dem",
     "source_geojson",
     "source_video",
-    "source_image"
+    "source_image",
+    "source_planet"
   ],
   "source_vector": {
     "type": {
@@ -199,6 +200,49 @@
           "ios": "5.10.0"
         }
       }
+    },
+    "*": {
+      "type": "*",
+      "doc": "Other keys to configure the data source."
+    }
+  },
+  "source_planet": {
+    "type": {
+      "required": true,
+      "type": "enum",
+      "values": {
+        "planet": {
+          "doc": "A planet vector tile source."
+        }
+      },
+      "doc": "The type of the source."
+    },
+    "tiles": {
+      "type": "array",
+      "value": "string",
+      "doc": "An array of one or more tile sources. May be a file path or source name."
+    },
+    "bounds": {
+      "type": "array",
+      "value": "number",
+      "length": 4,
+      "default": [
+        -180,
+        -85.051129,
+        180,
+        85.051129
+      ],
+      "doc": "An array containing the longitude and latitude of the southwest and northeast corners of the source's bounding box in the following order: `[sw.lng, sw.lat, ne.lng, ne.lat]`. When this property is included in a source, no tiles outside of the given bounds are requested by MapLibre GL."
+    },
+    "minzoom": {
+      "type": "number",
+      "default": 0,
+      "doc": "Minimum zoom level for which tiles are available, as in the TileJSON spec."
+    },
+    "maxzoom": {
+      "type": "number",
+      "default": 22,
+      "doc": "Maximum zoom level for which tiles are available, as in the TileJSON spec. Data from tiles at the maxzoom are used when displaying the map at higher zoom levels."
     },
     "*": {
       "type": "*",
